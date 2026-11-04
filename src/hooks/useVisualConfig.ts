@@ -33,6 +33,7 @@ import {
   writeVisualServer,
   validateVisualServer,
 } from '@/features/config/visualConfigServer';
+import { areApiKeyTagsEqual, parseApiKeyTags, pruneApiKeyTags } from '@/features/config/apiKeyTags';
 
 function asRecord(value: unknown): Record<string, unknown> | null {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return null;
@@ -1257,6 +1258,9 @@ function getNextDirtyFields(
     ] as Array<keyof VisualConfigValues>
   ).forEach(updateScalarDirty);
 
+  if (Object.prototype.hasOwnProperty.call(patch, 'apiKeyTags')) {
+    updateDirty('apiKeyTags', areApiKeyTagsEqual(nextValues.apiKeyTags, baselineValues.apiKeyTags));
+  }
   if (Object.prototype.hasOwnProperty.call(patch, 'pluginStoreSources')) {
     updateDirty(
       'pluginStoreSources',
@@ -1455,6 +1459,7 @@ function parseVisualValuesFromYaml(yamlContent: string): VisualConfigValues {
 
     authDir: typeof v8Oauth?.['auth-dir'] === 'string' ? v8Oauth?.['auth-dir'] : '',
     apiKeysText: parseApiKeysText(asRecord(parsed.access)?.['api-keys']),
+    apiKeyTags: parseApiKeyTags(asRecord(parsed.access)?.['key-tags']),
     pluginsEnabled: Boolean(plugins?.enabled),
     pluginStoreSources: parseStringList(plugins?.['store-sources']),
     pluginStoreAuth: parsePluginStoreAuthRules(plugins?.['store-auth']),
@@ -1735,6 +1740,19 @@ export function useVisualConfig() {
             doc.setIn(['access', 'api-keys'], apiKeys);
           } else if (docHas(doc, ['access', 'api-keys'])) {
             doc.deleteIn(['access', 'api-keys']);
+          }
+        }
+        if (dirtyFields.has('apiKeysText') || dirtyFields.has('apiKeyTags')) {
+          // Tags only apply to configured keys; drop entries for removed keys.
+          const apiKeys = values.apiKeysText
+            .split('\n')
+            .map((key) => key.trim())
+            .filter(Boolean);
+          const keyTags = pruneApiKeyTags(values.apiKeyTags, apiKeys);
+          if (Object.keys(keyTags).length > 0) {
+            doc.setIn(['access', 'key-tags'], keyTags);
+          } else if (docHas(doc, ['access', 'key-tags'])) {
+            doc.deleteIn(['access', 'key-tags']);
           }
         }
 

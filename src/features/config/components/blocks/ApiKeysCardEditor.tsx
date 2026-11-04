@@ -10,12 +10,28 @@ import { generateSecureApiKey } from '@/utils/apiKey';
 import { maskApiKey } from '@/utils/format';
 import { isValidApiKeyCharset } from '@/utils/validation';
 import { ApiKeyStrengthMeter } from './ApiKeyStrengthMeter';
+import { TagList } from '@/components/ui/TagList';
+import { formatTagsText, parseTagsText } from '@/utils/tags';
+import {
+  areApiKeyTagsEqual,
+  pruneApiKeyTags,
+  setApiKeyTags,
+  type ApiKeyTags,
+} from '../../apiKeyTags';
 import styles from './Blocks.module.scss';
+
+export interface ApiKeysCardEditorChange {
+  apiKeysText: string;
+  apiKeyTags: ApiKeyTags;
+}
 
 interface ApiKeysCardEditorProps {
   value: string;
+  /** Credential tags per client key (access.key-tags). */
+  tags: ApiKeyTags;
   disabled?: boolean;
-  onChange: (nextValue: string) => void;
+  /** Keys and tags change together so renamed or deleted keys never leave stale tags. */
+  onChange: (next: ApiKeysCardEditorChange) => void;
 }
 
 export const ApiKeysCardEditor = memo(function ApiKeysCardEditor(props: ApiKeysCardEditorProps) {
@@ -25,6 +41,7 @@ export const ApiKeysCardEditor = memo(function ApiKeysCardEditor(props: ApiKeysC
 
 function ScopedApiKeysCardEditor({
   value,
+  tags,
   disabled,
   onChange,
   apiBase,
@@ -57,18 +74,22 @@ function ScopedApiKeysCardEditor({
 
   const apiKeyInputId = useId();
   const nameInputId = useId();
+  const tagsInputId = useId();
+  const tagsHintId = `${tagsInputId}-hint`;
   const nameHintId = `${nameInputId}-hint`;
   const apiKeyHintId = `${apiKeyInputId}-hint`;
   const apiKeyErrorId = `${apiKeyInputId}-error`;
   const [modalOpen, setModalOpen] = useState(false);
   const [editingApiKeyId, setEditingApiKeyId] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState('');
+  const [tagsValue, setTagsValue] = useState('');
   const [formError, setFormError] = useState('');
 
   const openAddModal = () => {
     setNameValue('');
     setEditingApiKeyId(null);
     setInputValue('');
+    setTagsValue('');
     setFormError('');
     setModalOpen(true);
   };
@@ -80,6 +101,7 @@ function ScopedApiKeysCardEditor({
     setNameValue(latestNames[nameFingerprints[editingIndex]] ?? '');
     setEditingApiKeyId(apiKeyId);
     setInputValue(apiKeys[editingIndex] ?? '');
+    setTagsValue(formatTagsText(tags[apiKeys[editingIndex] ?? ''] ?? []));
     setFormError('');
     setModalOpen(true);
   };
@@ -87,19 +109,23 @@ function ScopedApiKeysCardEditor({
   const closeModal = () => {
     setModalOpen(false);
     setInputValue('');
+    setTagsValue('');
     setEditingApiKeyId(null);
     setFormError('');
   };
 
-  const updateApiKeys = (nextKeys: string[]) => {
-    onChange(nextKeys.join('\n'));
+  const updateApiKeys = (nextKeys: string[], nextTags: ApiKeyTags) => {
+    onChange({ apiKeysText: nextKeys.join('\n'), apiKeyTags: pruneApiKeyTags(nextTags, nextKeys) });
   };
 
   const handleDelete = (apiKeyId: string) => {
     const index = renderApiKeyIds.findIndex((id) => id === apiKeyId);
     if (index < 0) return;
     setApiKeyIds(renderApiKeyIds.filter((id) => id !== apiKeyId));
-    updateApiKeys(apiKeys.filter((_, i) => i !== index));
+    updateApiKeys(
+      apiKeys.filter((_, i) => i !== index),
+      tags
+    );
   };
 
   const handleSave = () => {
@@ -129,7 +155,20 @@ function ScopedApiKeysCardEditor({
     if (editingApiKeyId === null) {
       setApiKeyIds([...renderApiKeyIds, makeClientId()]);
     }
-    if (nextKeys.join('\n') !== apiKeys.join('\n')) updateApiKeys(nextKeys);
+    // Move tags with a renamed key, then apply the tags from the form.
+    const previousKey = editingIndex >= 0 ? apiKeys[editingIndex] : undefined;
+    let nextTags = tags;
+    if (previousKey !== undefined && previousKey !== trimmed) {
+      nextTags = setApiKeyTags(nextTags, previousKey, []);
+    }
+    nextTags = setApiKeyTags(nextTags, trimmed, parseTagsText(tagsValue));
+    const prunedTags = pruneApiKeyTags(nextTags, nextKeys);
+    if (
+      nextKeys.join('\n') !== apiKeys.join('\n') ||
+      !areApiKeyTagsEqual(prunedTags, pruneApiKeyTags(tags, apiKeys))
+    ) {
+      updateApiKeys(nextKeys, nextTags);
+    }
     closeModal();
   };
 
@@ -173,6 +212,10 @@ function ScopedApiKeysCardEditor({
                     t('config_management.visual.api_keys.input_label')}
                 </span>
                 <span className={styles.apiKeyValue}>{maskApiKey(String(key || ''))}</span>
+                <TagList
+                  tags={tags[key] ?? []}
+                  label={t('config_management.visual.api_keys.tags_label')}
+                />
               </span>
               <span className={styles.apiKeyActions}>
                 <Button
@@ -240,6 +283,23 @@ function ScopedApiKeysCardEditor({
           />
           <div id={nameHintId} className="hint">
             {t('config_management.visual.api_keys.name_hint')}
+          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor={tagsInputId}>{t('config_management.visual.api_keys.tags_label')}</label>
+          <input
+            id={tagsInputId}
+            className="input"
+            value={tagsValue}
+            onChange={(event) => setTagsValue(event.target.value)}
+            placeholder={t('config_management.visual.api_keys.tags_placeholder')}
+            aria-describedby={tagsHintId}
+            autoComplete="off"
+            spellCheck={false}
+            disabled={disabled}
+          />
+          <div id={tagsHintId} className="hint">
+            {t('config_management.visual.api_keys.tags_hint')}
           </div>
         </div>
         <div className="form-group">

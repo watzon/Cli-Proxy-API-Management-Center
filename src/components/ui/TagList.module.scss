@@ -1,0 +1,20 @@
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag {
+  max-width: 100%;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--count-badge-bg);
+  color: var(--count-badge-text);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}

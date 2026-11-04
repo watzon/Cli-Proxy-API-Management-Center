@@ -167,6 +167,8 @@ export type VisualConfigValues = {
   authDir: string;
   /** Client authentication keys at access.api-keys (never the upstream api-keys map). */
   apiKeysText: string;
+  /** Credential tags per client key at access.key-tags. */
+  apiKeyTags: Record<string, string[]>;
   pluginsEnabled: boolean;
   pluginStoreSources: string[];
   pluginStoreAuth: PluginStoreAuthRule[];
@@ -269,6 +271,7 @@ export const DEFAULT_VISUAL_VALUES: VisualConfigValues = {
   rmPanelRepo: '',
   authDir: '',
   apiKeysText: '',
+  apiKeyTags: {},
   pluginsEnabled: false,
   pluginStoreSources: [],
   pluginStoreAuth: [],

@@ -32,6 +32,7 @@ import {
   validateCredentialWeightText,
   type CredentialWeightError,
 } from '@/utils/credentialWeight';
+import { areTagListsEqual, formatTagsText, normalizeTags, parseTagsText } from '@/utils/tags';
 
 type AuthFileHeaders = Record<string, string>;
 type AuthFileHeadersErrorKey =
@@ -54,6 +55,7 @@ export type PrefixProxyEditorField =
   | 'usingApi'
   | 'useSiwc'
   | 'note'
+  | 'tagsText'
   | 'excludedModelsText'
   | 'headersText';
 
@@ -86,6 +88,8 @@ export type PrefixProxyEditorState = {
   usingApiTouched: boolean;
   note: string;
   noteTouched: boolean;
+  tagsText: string;
+  tagsTouched: boolean;
   excludedModelsText: string;
   excludedModelsTouched: boolean;
   headersText: string;
@@ -355,6 +359,13 @@ export const buildAuthFileFieldsPatch = (
     }
   }
 
+  if (editor.tagsTouched) {
+    const nextTags = parseTagsText(editor.tagsText);
+    if (!areTagListsEqual(nextTags, normalizeTags(original.tags))) {
+      patch.tags = nextTags.length > 0 ? nextTags : null;
+    }
+  }
+
   if (editor.excludedModelsTouched) {
     const originalExcludedModels = readExcludedModels(original);
     const nextExcludedModels = parseExcludedModelsText(editor.excludedModelsText);
@@ -453,6 +464,14 @@ const buildPrefixProxyUpdatedText = (
       next.note = patch.note;
     } else if ('note' in next) {
       delete next.note;
+    }
+  }
+
+  if (patch.tags !== undefined) {
+    if (patch.tags && patch.tags.length > 0) {
+      next.tags = patch.tags;
+    } else {
+      delete next.tags;
     }
   }
 
@@ -556,6 +575,8 @@ export function useAuthFilesPrefixProxyEditor(
       usingApiTouched: false,
       note: '',
       noteTouched: false,
+      tagsText: '',
+      tagsTouched: false,
       excludedModelsText: '',
       excludedModelsTouched: false,
       headersText: '',
@@ -608,6 +629,7 @@ export function useAuthFilesPrefixProxyEditor(
         : false;
       const usingApi = supportsAuthFileUsingApi(providerKey) ? readAuthFileUsingApi(json) : false;
       const note = typeof json.note === 'string' ? json.note : '';
+      const tagsText = formatTagsText(normalizeTags(json.tags));
       const excludedModelsText = readExcludedModels(json).join('\n');
       const headers = json.headers;
       let headersText = '';
@@ -644,6 +666,8 @@ export function useAuthFilesPrefixProxyEditor(
           usingApiTouched: false,
           note,
           noteTouched: false,
+          tagsText,
+          tagsTouched: false,
           excludedModelsText,
           excludedModelsTouched: false,
           headersText,
@@ -709,6 +733,7 @@ export function useAuthFilesPrefixProxyEditor(
         return { ...prev, usingApi: Boolean(value), usingApiTouched: true };
       }
       if (field === 'note') return { ...prev, note: String(value), noteTouched: true };
+      if (field === 'tagsText') return { ...prev, tagsText: String(value), tagsTouched: true };
       if (field === 'excludedModelsText') {
         return {
           ...prev,

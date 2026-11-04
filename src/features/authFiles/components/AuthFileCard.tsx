@@ -36,6 +36,7 @@ import { AuthFileQuotaSection } from '@/features/authFiles/components/AuthFileQu
 import { AuthFileCooldownSection } from './AuthFileCooldownSection';
 import { getSiwcBindingStatus, supportsSiwcBinding } from '@/features/oauth/siwcBinding';
 import { SiwcStatusBadge } from '@/features/oauth/components/SiwcStatusBadge';
+import { TagList } from '@/components/ui/TagList';
 import styles from './AuthFileCard.module.scss';
 
 export type AuthFileCardProps = {
@@ -181,6 +182,8 @@ export function AuthFileCard(props: AuthFileCardProps) {
           {noteValue}
         </p>
       )}
+
+      <TagList tags={file.tags ?? []} label={t('auth_files.tags_label')} />
 
       {rawStatusMessage && hasStatusWarning && (
         <div className={styles.warning} title={rawStatusMessage}>

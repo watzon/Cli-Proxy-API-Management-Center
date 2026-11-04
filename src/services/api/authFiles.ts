@@ -15,6 +15,7 @@ import {
   normalizeUsageTotal,
 } from '@/utils/recentRequests';
 import { parseTimestampMs } from '@/utils/timestamp';
+import { normalizeTags } from '@/utils/tags';
 import { normalizeAuthFileCooldowns, normalizeCooldownTimestamp } from './authFileCooldowns';
 
 type AuthFileStatusResponse = { status: string; disabled: boolean };
@@ -46,6 +47,8 @@ export type AuthFileFieldsPatch = {
   using_api?: boolean;
   use_siwc?: boolean;
   note?: string;
+  /** Replaces the credential tags; an empty list or null clears them. */
+  tags?: string[] | null;
   excluded_models?: string[];
   'excluded-models'?: string[];
   expired?: string;
@@ -274,6 +277,7 @@ const normalizeAuthFileEntry = (
     typeof entry.statusMessage === 'string' ? entry.statusMessage.trim() : '';
   const statusMessage = readTextField(entry, 'status_message') || declaredStatusMessage;
   const note = readTextField(entry, 'note');
+  const tags = normalizeTags(entry.tags);
   const email = readTextField(entry, 'email');
   // Never normalize account/account_type: API-key credentials expose secrets there.
   const projectId = readTextField(entry, 'project_id');
@@ -306,6 +310,8 @@ const normalizeAuthFileEntry = (
     priority,
     weight,
     ...(note ? { note } : {}),
+    // Replace the raw backend value so invalid entries never reach the UI.
+    tags: tags.length > 0 ? tags : undefined,
     ...(email ? { email } : {}),
     ...(projectId ? { projectId } : {}),
   };

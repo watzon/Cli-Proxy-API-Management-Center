@@ -72,6 +72,8 @@ export interface AuthFileItem {
   priority?: number;
   weight?: number;
   note?: string;
+  /** Normalized credential tags; client keys only use credentials that share a tag. */
+  tags?: string[];
   success?: unknown;
   failed?: unknown;
   /** Cumulative success/failure counts normalized by the API boundary. */

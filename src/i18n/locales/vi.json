@@ -360,6 +360,9 @@
     "note_label": "Ghi chú",
     "note_placeholder": "Nhập ghi chú, ví dụ: Tài khoản của John",
     "note_hint": "Tùy chọn. Dùng để mô tả mục đích hoặc chủ sở hữu của credential này; để trống nếu không cần.",
+    "tags_label": "Thẻ",
+    "tags_placeholder": "work, personal",
+    "tags_hint": "Tùy chọn. Phân tách bằng dấu phẩy. Chỉ khóa client có thẻ trùng khớp mới dùng được thông tin xác thực này; khóa không có thẻ không dùng được. Để trống nếu không gắn thẻ.",
     "excluded_models_label": "Model bị loại trừ (excluded_models)",
     "headers_label": "Header tùy chỉnh (headers)",
     "headers_placeholder": "{\n  \"Header-Name\": \"value\"\n}",
@@ -1298,6 +1301,9 @@
         "name_label": "Tên / mô tả (tùy chọn)",
         "name_placeholder": "Ví dụ: Laptop của Alice",
         "name_hint": "Được lưu ngay trong trình duyệt này, riêng cho từng máy chủ. Không bao gồm trong cấu hình máy chủ. Xóa trường này để xóa tên.",
+        "tags_label": "Thẻ (tùy chọn)",
+        "tags_placeholder": "work, personal",
+        "tags_hint": "Phân tách bằng dấu phẩy. Khóa này chỉ dùng thông tin xác thực có ít nhất một thẻ trùng. Để trống để chỉ dùng thông tin xác thực không có thẻ.",
         "name_save_error": "Không thể lưu tên vào bộ lưu trữ trình duyệt. Vui lòng kiểm tra cài đặt lưu trữ của trình duyệt."
       },
       "payload_rules": {

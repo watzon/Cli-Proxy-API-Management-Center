@@ -318,6 +318,16 @@ export function AuthFileDetailsSheet(props: AuthFileDetailsSheetProps) {
                     disabled={disableControls || editor.saving || !editor.json}
                     onChange={(e) => onChange('note', e.target.value)}
                   />
+                  <Input
+                    label={t('auth_files.tags_label')}
+                    value={editor.tagsText}
+                    placeholder={t('auth_files.tags_placeholder')}
+                    hint={t('auth_files.tags_hint')}
+                    autoComplete="off"
+                    spellCheck={false}
+                    disabled={disableControls || editor.saving || !editor.json}
+                    onChange={(e) => onChange('tagsText', e.target.value)}
+                  />
                 </div>
               )}
             </>
