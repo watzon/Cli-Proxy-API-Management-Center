@@ -9,7 +9,8 @@
  */
 
 import { useMemo } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useRoutes, type Location } from 'react-router-dom';
+import { PageTransition } from '@/components/common/PageTransition';
 import { useThemeStore } from '@/stores';
 import type { Theme } from '@/types';
 import { TracesEnvironmentContext, type TracesEnvironment } from '../context';
@@ -17,6 +18,13 @@ import { TracesRoutes } from '../TracesRoutes';
 import { createMockTracesApi } from './mockTracesApi';
 
 const BASE = '/__preview/traces';
+
+// The real app renders pages through PageTransition, which gives each page its
+// own copy of the location. Do the same here so the preview shows the same
+// URL behavior as the real app.
+function LayerRoutes({ location, off }: { location: Location; off: boolean }) {
+  return useRoutes([{ path: '*', element: <TracesRoutes key={off ? 'off' : 'on'} /> }], location);
+}
 const THEMES: Theme[] = ['light', 'white', 'dark'];
 
 export function TracesPreview() {
@@ -76,7 +84,7 @@ export function TracesPreview() {
       </nav>
       <main style={{ padding: '28px 32px 48px', maxWidth: 1440 }}>
         <TracesEnvironmentContext.Provider value={environment}>
-          <TracesRoutes key={off ? 'off' : 'on'} />
+          <PageTransition render={(layerLocation) => <LayerRoutes location={layerLocation} off={off} />} />
         </TracesEnvironmentContext.Provider>
       </main>
     </div>

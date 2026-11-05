@@ -100,6 +100,18 @@ export function PageTransition({
     return document.scrollingElement as HTMLElement | null;
   }, [scrollContainerRef]);
 
+  // A change to the query or hash only (same path) does not start a transition,
+  // but the current page must still see the new location. Otherwise pages that
+  // keep state in the query, like filters, read a stale URL until a reload.
+  useLayoutEffect(() => {
+    if (currentLayerPathname !== location.pathname) return;
+    if (currentLayer?.location === location) return;
+    const withLocation = (list: Layer[]) =>
+      list.map((layer) => (layer.status === 'current' ? { ...layer, location } : layer));
+    if (nextLayersRef.current) nextLayersRef.current = withLocation(nextLayersRef.current);
+    setLayers(withLocation);
+  }, [location, currentLayer?.location, currentLayerPathname]);
+
   useLayoutEffect(() => {
     if (isAnimating) return;
     if (location.key === currentLayerKey) return;
