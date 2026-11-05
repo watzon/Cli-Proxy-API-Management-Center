@@ -1,0 +1,684 @@
+// Shared styles for the Traces pages. Colors come from the theme tokens; the few
+// chart colors below are defined for light and dark themes.
+
+.page {
+  // Categorical series colors (slot 0 is the neutral "Other").
+  --trace-series-0: #a8a199;
+  --trace-series-1: #b5562f;
+  --trace-series-2: #3f6b9a;
+  --trace-series-3: #6e8c3f;
+  --trace-series-4: #c99a2e;
+  --trace-series-5: #8a5a8c;
+  --trace-series-6: #3d8a85;
+  --trace-series-7: #b9606f;
+  --trace-series-8: #6b7280;
+
+  --trace-ok: #6d6760;
+  --trace-retried: #d9822b;
+  --trace-error: var(--error-color);
+  --trace-level-normal: #5c5650;
+  --trace-level-high: #d9822b;
+  --trace-level-critical: var(--error-color);
+  --trace-track: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  --trace-surface: var(--floating-surface);
+
+  --trace-add-bg: color-mix(in srgb, #10b981 14%, transparent);
+  --trace-add-text: #1d4a1a;
+  --trace-remove-bg: color-mix(in srgb, #c65746 14%, transparent);
+  --trace-remove-text: #7a2f26;
+  --trace-hunk-bg: color-mix(in srgb, #3f6b9a 12%, transparent);
+  --trace-hunk-text: #1f4a78;
+
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  min-width: 0;
+  color: var(--text-primary);
+}
+
+:global([data-theme='dark']) .page {
+  --trace-series-0: #847d75;
+  --trace-series-1: #d9774e;
+  --trace-series-2: #6f9ccc;
+  --trace-series-3: #94b464;
+  --trace-series-4: #e0b64c;
+  --trace-series-5: #b58ab7;
+  --trace-series-6: #5fb3ad;
+  --trace-series-7: #d98593;
+  --trace-series-8: #9aa1ad;
+
+  --trace-ok: #a29c95;
+  --trace-retried: #f0a050;
+  --trace-error: #e06a58;
+  --trace-level-normal: #a29c95;
+  --trace-level-high: #f0a050;
+  --trace-level-critical: #e06a58;
+
+  --trace-add-text: #8fe0b0;
+  --trace-remove-text: #f1b0a6;
+  --trace-hunk-text: #a9c8ea;
+}
+
+// ─── Header ────────────────────────────────────────────────────────────────
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.crumb {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.headerActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.recorder {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  width: fit-content;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+// ─── Cards ─────────────────────────────────────────────────────────────────
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px 20px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+}
+
+.cardFlush {
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+}
+
+.cardFlush > .cardHeader {
+  padding: 16px 20px 12px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.cardTitleSmall {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.cardSub {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.muted {
+  color: var(--text-secondary);
+}
+
+.note {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.grid2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+  gap: 16px;
+}
+
+.split {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.splitMain {
+  flex: 999 1 560px;
+  min-width: 0;
+}
+
+.splitSide {
+  flex: 1 1 300px;
+  min-width: min(280px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+// ─── KPI and stat cards ────────────────────────────────────────────────────
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.kpi {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  min-width: 0;
+}
+
+.kpiLabel {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.kpiValue {
+  font-size: 26px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.kpiSub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  min-width: 0;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.statValue {
+  font-size: 20px;
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+// ─── Tables ────────────────────────────────────────────────────────────────
+
+.table {
+  th {
+    white-space: nowrap;
+  }
+
+  td {
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+}
+
+.tableInCard {
+  border-radius: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.mono {
+  font-family: $font-mono;
+  font-size: 12px;
+}
+
+.wrapCell {
+  white-space: normal !important;
+  min-width: 220px;
+}
+
+.rowTitle {
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.rowMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+.sortIcon {
+  display: inline-flex;
+  opacity: 0.4;
+}
+
+.sortIconActive {
+  opacity: 1;
+}
+
+.tfoot td {
+  font-weight: 600;
+  border-top: 1px solid var(--border-color);
+  padding: 12px 14px;
+  white-space: nowrap;
+}
+
+// ─── Pills, swatches, bars ─────────────────────────────────────────────────
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+  background: var(--count-badge-bg);
+  color: var(--text-primary);
+}
+
+.pillOk {
+  background: var(--success-badge-bg);
+  color: var(--success-badge-text);
+}
+
+.pillWarn {
+  background: var(--amber-10);
+  color: var(--amber-text);
+}
+
+.pillError {
+  background: var(--failure-badge-bg);
+  color: var(--failure-badge-text);
+}
+
+.swatch {
+  display: inline-block;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 13px;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.shareTrack {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--trace-track);
+  overflow: hidden;
+}
+
+.shareFill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.barRow {
+  display: grid;
+  grid-template-columns: minmax(80px, 140px) 1fr 64px;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.barRowLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.summaryLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  font-size: 13px;
+  color: var(--text-secondary);
+
+  strong {
+    color: var(--text-primary);
+  }
+}
+
+// ─── Segmented control ─────────────────────────────────────────────────────
+
+.segmented {
+  display: inline-flex;
+  flex-wrap: wrap;
+  padding: 3px;
+  background: var(--bg-tertiary);
+  border-radius: 8px;
+}
+
+.segment {
+  height: 30px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color var(--dur-hover) var(--ease-out-strong);
+
+  &:hover {
+    color: var(--text-primary);
+  }
+
+  &[aria-pressed='true'] {
+    background: var(--trace-surface);
+    color: var(--text-primary);
+    font-weight: 600;
+    box-shadow: var(--shadow);
+  }
+}
+
+// ─── Notices and states ────────────────────────────────────────────────────
+
+.notice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  background: var(--amber-10);
+  border: 1px solid var(--amber-30);
+  color: var(--text-primary);
+}
+
+.noticeDanger {
+  background: var(--destructive-10);
+  border-color: var(--destructive-30);
+}
+
+.noticeIcon {
+  flex: none;
+  margin-top: 1px;
+  color: var(--amber-text);
+}
+
+.noticeDanger .noticeIcon {
+  color: var(--trace-error);
+}
+
+.noticeBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.noticeTitle {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.emptyBlock {
+  padding: 40px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.stateCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 28px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  max-width: 640px;
+}
+
+.stateTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.stateText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.code {
+  font-family: $font-mono;
+  font-size: 0.92em;
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.skeletonStack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.loadingOverlay {
+  opacity: 0.6;
+  transition: opacity var(--dur-hover) var(--ease-out-strong);
+}
+
+// ─── Pagination ────────────────────────────────────────────────────────────
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-color);
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.paginationButtons {
+  display: flex;
+  gap: 8px;
+}
+
+// ─── Links and focus ───────────────────────────────────────────────────────
+
+.link {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: var(--border-hover);
+
+  &:hover {
+    text-decoration-color: currentColor;
+  }
+}
+
+.page :is(a, button, input, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ─── Form bits ─────────────────────────────────────────────────────────────
+
+.inlineForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.textInput {
+  height: 34px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+  background: var(--trace-surface);
+  color: var(--text-primary);
+  font-size: 13px;
+  min-width: 0;
+
+  &[aria-invalid='true'] {
+    border-color: var(--error-color);
+  }
+}
+
+.fieldError {
+  font-size: 12px;
+  color: var(--trace-error);
+}
+
+.buttonRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 22px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .segment,
+  .loadingOverlay {
+    transition: none;
+  }
+}

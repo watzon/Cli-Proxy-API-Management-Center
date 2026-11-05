@@ -1,0 +1,13 @@
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 28px;
+  width: 120px;
+}
+
+.bar {
+  flex: 1;
+  min-width: 0;
+  border-radius: 1px;
+}

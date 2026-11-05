@@ -31,6 +31,14 @@ const devPreviewRoutes = import.meta.env.DEV
           return { Component: QuotaTierPreview };
         },
       },
+      {
+        path: '/__preview/traces/*',
+        HydrateFallback: () => null,
+        lazy: async () => {
+          const { TracesPreview } = await import('@/features/traces/dev/TracesPreview');
+          return { Component: TracesPreview };
+        },
+      },
     ]
   : [];
 

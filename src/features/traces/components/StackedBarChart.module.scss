@@ -1,0 +1,154 @@
+.readout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 16px;
+  min-height: 22px;
+  font-size: 13px;
+}
+
+.readoutDate {
+  font-weight: 600;
+}
+
+.readoutTotal {
+  font-variant-numeric: tabular-nums;
+}
+
+.readoutPart {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-secondary);
+
+  strong {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+.chart {
+  display: flex;
+  gap: 10px;
+  border-radius: 8px;
+
+  &:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 4px;
+  }
+}
+
+.axis {
+  flex: none;
+  width: 52px;
+  height: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+
+  span {
+    line-height: 1;
+    transform: translateY(-50%);
+  }
+
+  span:last-child {
+    transform: translateY(50%);
+  }
+}
+
+.plotColumn {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.plot {
+  position: relative;
+  height: 240px;
+  border-bottom: 1px solid var(--border-hover);
+}
+
+.grid {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  pointer-events: none;
+
+  div {
+    border-top: 1px solid var(--border-color);
+  }
+
+  div:last-child {
+    border-top: 0;
+  }
+}
+
+.bars {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+}
+
+.slot {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  cursor: default;
+}
+
+.column {
+  width: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  border-radius: 3px 3px 0 0;
+  overflow: hidden;
+}
+
+.columnActive {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 1px;
+}
+
+.segment {
+  flex: none;
+}
+
+.labels {
+  display: flex;
+  font-size: 12px;
+  color: var(--text-secondary);
+
+  span {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    white-space: nowrap;
+    overflow: visible;
+  }
+
+  .labelEnd {
+    justify-content: flex-end;
+  }
+}
+
+.empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+}

@@ -1,0 +1,182 @@
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legendSwatch {
+  position: relative;
+  display: inline-block;
+  width: 14px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.scroll {
+  overflow-x: auto;
+  padding: 4px 2px;
+}
+
+.inner {
+  min-width: 760px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.laneLabel {
+  width: 150px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  font-size: 13px;
+  min-width: 0;
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.laneMain {
+  font-weight: 600;
+}
+
+.laneSub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.ticks {
+  position: relative;
+  flex: 1;
+  height: 18px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+
+  span {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  span:first-child {
+    transform: none;
+  }
+}
+
+.track {
+  position: relative;
+  flex: 1;
+  height: 36px;
+  background: var(--bg-quinary);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+}
+
+.breakFill {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--border-hover) 0 2px,
+    var(--bg-quinary) 2px 7px
+  );
+}
+
+.okFill {
+  background: var(--trace-ok);
+}
+
+.break {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  span {
+    font-size: 11px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    padding: 0 4px;
+    background: var(--bg-quinary);
+    border-radius: 3px;
+  }
+}
+
+.turn {
+  position: absolute;
+  top: 6px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+  background: var(--trace-ok);
+  transition: transform var(--dur-press) var(--ease-out-strong);
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+    z-index: 2;
+  }
+}
+
+// Retried turns get a notch on top; failed turns are hatched. The legend uses the same
+// marks, so status does not depend on color alone.
+.retried {
+  background: var(--trace-retried);
+  box-shadow: inset 0 4px 0 color-mix(in srgb, var(--text-primary) 45%, transparent);
+}
+
+.error {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--trace-error) 0 3px,
+    color-mix(in srgb, var(--trace-error) 55%, var(--bg-primary)) 3px 6px
+  );
+}
+
+.selected {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+  z-index: 1;
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .turn {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}

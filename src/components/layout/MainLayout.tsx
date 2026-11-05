@@ -49,6 +49,7 @@ import {
   type PluginResourceEntry,
 } from '@/features/plugins/pluginResources';
 import { APIKEY_FUN_DISPLAY_NAME, hasApiKeyFunConfig } from '@/features/providers/sponsor';
+import { IconSidebarTraces } from '@/features/traces/components/TracesIcon';
 import { triggerHeaderRefresh } from '@/hooks/useHeaderRefresh';
 import { LANGUAGE_LABEL_KEYS, LANGUAGE_ORDER } from '@/utils/constants';
 import { isSupportedLanguage } from '@/utils/language';
@@ -68,6 +69,7 @@ const sidebarIcons: Record<string, ReactNode> = {
   config: <IconSidebarConfig size={18} />,
   logs: <IconSidebarLogs size={18} />,
   system: <IconSidebarSystem size={18} />,
+  traces: <IconSidebarTraces size={18} />,
 };
 
 interface SidebarNavLinkItem {
@@ -80,6 +82,8 @@ interface SidebarNavLinkItem {
   badge?: number;
   badgeLabel?: string;
   icon: ReactNode;
+  /** Active only on this exact path, not on its sub-paths. */
+  end?: boolean;
 }
 
 interface SidebarNavDrawerItem {
@@ -318,6 +322,7 @@ export function MainLayout() {
   const connectionStatus = useAuthStore((state) => state.connectionStatus);
   const apiBase = useAuthStore((state) => state.apiBase);
   const supportsPlugin = useAuthStore((state) => state.supportsPlugin);
+  const supportsTraces = useAuthStore((state) => state.supportsTraces);
 
   const fetchConfig = useConfigStore((state) => state.fetchConfig);
   const clearCache = useConfigStore((state) => state.clearCache);
@@ -596,6 +601,23 @@ export function MainLayout() {
     icon: sidebarIcons.quickStart,
   };
 
+  const navSubDot = <span className="nav-sub-dot" aria-hidden="true" />;
+  const tracesNavItem: SidebarNavDrawerItem = {
+    kind: 'drawer',
+    id: 'traces',
+    label: t('traces.nav.traces'),
+    meta: t('traces.nav.meta'),
+    icon: sidebarIcons.traces,
+    children: [
+      { path: '/traces', labelKey: 'traces.nav.overview', icon: navSubDot, end: true },
+      { path: '/traces/projects', labelKey: 'traces.nav.projects', icon: navSubDot },
+      { path: '/traces/sessions', labelKey: 'traces.nav.sessions', icon: navSubDot },
+      { path: '/traces/errors', labelKey: 'traces.nav.errors', icon: navSubDot },
+      { path: '/traces/accounts', labelKey: 'traces.nav.accounts', icon: navSubDot },
+      { path: '/traces/settings', labelKey: 'traces.nav.settings', icon: navSubDot },
+    ],
+  };
+
   const navGroups: SidebarNavGroup[] = [
     {
       id: 'operate',
@@ -650,6 +672,7 @@ export function MainLayout() {
       id: 'observe',
       labelKey: 'nav_groups.observe',
       items: [
+        ...(supportsTraces ? [tracesNavItem] : []),
         {
           path: '/quota',
           labelKey: 'nav.quota_management',
@@ -869,6 +892,7 @@ export function MainLayout() {
       <NavLink
         key={item.path}
         to={item.path}
+        end={item.end}
         className={({ isActive }) => `${className} ${isActive ? 'active' : ''}`}
         onClick={() => {
           focusedRailItemRef.current = null;
@@ -918,7 +942,10 @@ export function MainLayout() {
       return renderNavLink(item);
     }
 
-    const isActive = item.children.some((child) => child.path === location.pathname);
+    const isActive = item.children.some(
+      (child) =>
+        child.path === location.pathname || location.pathname.startsWith(`${child.path}/`)
+    );
     const isOpen = isActive || expandedPluginResourceIDs.has(item.id);
 
     return (

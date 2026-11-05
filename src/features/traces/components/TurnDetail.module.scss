@@ -1,0 +1,284 @@
+.panel {
+  flex: 999 1 520px;
+  min-width: 0;
+}
+
+.headingRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.when {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.intro {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.blockHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex: none;
+}
+
+.dotUser {
+  background: var(--trace-series-1);
+}
+
+.dotAssistant {
+  background: var(--trace-series-2);
+}
+
+.dotToolCall {
+  background: var(--trace-series-3);
+}
+
+.dotToolResult,
+.dotSystem {
+  background: var(--trace-series-0);
+}
+
+.dotThinking {
+  background: var(--trace-series-5);
+}
+
+.text {
+  margin: 0;
+  padding-left: 16px;
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.code {
+  margin: 0 0 0 16px;
+  padding: 10px 12px;
+  font-family: $font-mono;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 480px;
+  overflow: auto;
+  background: var(--bg-quinary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+}
+
+.codeError {
+  border-color: var(--failure-badge-border);
+  background: var(--destructive-10);
+}
+
+.details {
+  margin-left: 16px;
+
+  summary {
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text-secondary);
+    width: fit-content;
+  }
+
+  .code,
+  .text {
+    margin-top: 8px;
+    margin-left: 0;
+    padding-left: 0;
+  }
+
+  .code {
+    padding-left: 12px;
+  }
+}
+
+.truncated {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-left: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.diff {
+  margin-left: 16px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.diffHead {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  font-size: 12px;
+}
+
+.diffFile {
+  font-family: $font-mono;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.diffBody {
+  font-family: $font-mono;
+  font-size: 12px;
+  line-height: 1.6;
+  overflow-x: auto;
+  max-height: 560px;
+  overflow-y: auto;
+}
+
+.diffLine {
+  display: flex;
+  white-space: pre;
+  padding: 0 12px;
+  min-width: fit-content;
+}
+
+.diffSign {
+  display: inline-block;
+  flex: none;
+  width: 18px;
+  color: var(--text-secondary);
+  user-select: none;
+}
+
+.lineAdd {
+  background: var(--trace-add-bg);
+  color: var(--trace-add-text);
+}
+
+.lineRemove {
+  background: var(--trace-remove-bg);
+  color: var(--trace-remove-text);
+}
+
+.lineHunk,
+.lineHeader {
+  background: var(--trace-hunk-bg);
+  color: var(--trace-hunk-text);
+}
+
+.lineSkip {
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.facts {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    text-align: left;
+    font-weight: 400;
+    color: var(--text-secondary);
+    padding: 6px 12px 6px 0;
+    vertical-align: top;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 6px 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    overflow-wrap: anywhere;
+  }
+
+  tr + tr th,
+  tr + tr td {
+    border-top: 1px solid var(--border-color);
+  }
+}
+
+.factsLeft td {
+  text-align: left;
+}
+
+.totalRow th,
+.totalRow td {
+  font-weight: 600;
+  color: var(--text-primary) !important;
+}
+
+.attempt {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  gap: 8px;
+  align-items: start;
+  font-size: 13px;
+}
+
+.attemptBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.attemptBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  span:first-child {
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  span + span {
+    font-size: 12px;
+    color: var(--text-secondary);
+    overflow-wrap: anywhere;
+  }
+}
+
+.linkButton {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}

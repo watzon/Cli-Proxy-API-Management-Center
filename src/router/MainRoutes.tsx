@@ -12,10 +12,11 @@ import { PluginsPage } from '@/features/plugins/PluginsPage';
 import { PluginStorePage } from '@/features/plugins/PluginStorePage';
 import { ConfigPage } from '@/features/config/ConfigPage';
 import { LogsPage } from '@/features/logs/LogsPage';
+import { TracesRoutes } from '@/features/traces/TracesRoutes';
 import { SystemPage } from '@/pages/SystemPage';
 import { useAuthStore } from '@/stores';
 
-const createMainRoutes = (supportsPlugin: boolean) => [
+const createMainRoutes = (supportsPlugin: boolean, supportsTraces: boolean) => [
   { path: '/', element: <DashboardPage /> },
   { path: '/dashboard', element: <DashboardPage /> },
   { path: '/settings', element: <Navigate to="/config" replace /> },
@@ -44,11 +45,15 @@ const createMainRoutes = (supportsPlugin: boolean) => [
       ]),
   { path: '/config', element: <ConfigPage /> },
   { path: '/logs', element: <LogsPage /> },
+  supportsTraces
+    ? { path: '/traces/*', element: <TracesRoutes /> }
+    : { path: '/traces/*', element: <Navigate to="/" replace /> },
   { path: '/system', element: <SystemPage /> },
   { path: '*', element: <Navigate to="/" replace /> },
 ];
 
 export function MainRoutes({ location }: { location?: Location }) {
   const supportsPlugin = useAuthStore((state) => state.supportsPlugin);
-  return useRoutes(createMainRoutes(supportsPlugin), location);
+  const supportsTraces = useAuthStore((state) => state.supportsTraces);
+  return useRoutes(createMainRoutes(supportsPlugin, supportsTraces), location);
 }

@@ -28,6 +28,7 @@ interface AuthStoreState extends AuthState {
   hasRestorableSession: () => boolean;
   updateServerVersion: (version: string | null, buildDate?: string | null) => void;
   updateServerPluginSupport: (supportsPlugin: boolean) => void;
+  updateServerTracesSupport: (supportsTraces: boolean) => void;
 }
 
 let restoreSessionPromise: Promise<boolean> | null = null;
@@ -53,6 +54,7 @@ export const useAuthStore = create<AuthStoreState>()(
       serverVersion: null,
       serverBuildDate: null,
       supportsPlugin: false,
+      supportsTraces: false,
       connectionStatus: 'disconnected',
 
       // 恢复会话并自动登录
@@ -119,6 +121,7 @@ export const useAuthStore = create<AuthStoreState>()(
             serverVersion: null,
             serverBuildDate: null,
             supportsPlugin: false,
+            supportsTraces: false,
           });
           useConfigStore.getState().clearCache();
           useModelsStore.getState().clearCache();
@@ -179,6 +182,7 @@ export const useAuthStore = create<AuthStoreState>()(
           serverVersion: null,
           serverBuildDate: null,
           supportsPlugin: false,
+          supportsTraces: false,
           connectionStatus: 'disconnected',
         });
         localStorage.removeItem('isLoggedIn');
@@ -195,7 +199,7 @@ export const useAuthStore = create<AuthStoreState>()(
         try {
           // 重新配置客户端
           apiClient.setConfig({ apiBase, managementKey });
-          set({ supportsPlugin: false });
+          set({ supportsPlugin: false, supportsTraces: false });
 
           // 验证连接
           await useConfigStore.getState().fetchConfig();
@@ -211,6 +215,7 @@ export const useAuthStore = create<AuthStoreState>()(
             isAuthenticated: false,
             connectionStatus: 'error',
             supportsPlugin: false,
+            supportsTraces: false,
           });
           return false;
         }
@@ -226,6 +231,10 @@ export const useAuthStore = create<AuthStoreState>()(
 
       updateServerPluginSupport: (supportsPlugin) => {
         set({ supportsPlugin });
+      },
+
+      updateServerTracesSupport: (supportsTraces) => {
+        set({ supportsTraces });
       },
     }),
     {
@@ -274,5 +283,9 @@ if (typeof window !== 'undefined') {
 
   window.addEventListener('server-plugin-support-update', ((e: CustomEvent) => {
     useAuthStore.getState().updateServerPluginSupport(e.detail?.supportsPlugin === true);
+  }) as EventListener);
+
+  window.addEventListener('server-traces-support-update', ((e: CustomEvent) => {
+    useAuthStore.getState().updateServerTracesSupport(e.detail?.supportsTraces === true);
   }) as EventListener);
 }
