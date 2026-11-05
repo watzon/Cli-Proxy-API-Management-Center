@@ -16,6 +16,17 @@ export interface PolicyPanelProps {
 }
 
 function StrategyMark({ strategy }: { strategy: RoutingStrategy }) {
+  if (strategy === 'soonest-reset') {
+    // A clock face, then the dots that wait for their turn.
+    return (
+      <svg width="18" height="10" viewBox="0 0 18 10" aria-hidden="true" focusable="false">
+        <circle cx={5} cy={5} r={3.6} fill="none" stroke="currentColor" strokeWidth={1.2} />
+        <path d="M5 3v2.2l1.4 0.9" fill="none" stroke="currentColor" strokeWidth={1} />
+        <circle cx={11.5} cy={5} r={1.6} fill="currentColor" opacity={0.4} />
+        <circle cx={15.5} cy={5} r={1.6} fill="currentColor" opacity={0.25} />
+      </svg>
+    );
+  }
   // Three dots: even (round-robin), graded (weighted), first one filled (fill-first).
   const opacities =
     strategy === 'round-robin'

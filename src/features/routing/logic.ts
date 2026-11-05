@@ -479,7 +479,8 @@ export function resolveRoute(
     if (!hasActive && total > 0) {
       state = 'active';
       hasActive = true;
-      if (strategy !== 'fill-first') {
+      // fill-first and soonest-reset send each new request to one member, so no fixed split.
+      if (strategy !== 'fill-first' && strategy !== 'soonest-reset') {
         for (const member of members) {
           const value = units.get(member.key);
           if (value !== undefined) member.share = Math.round((value / total) * 1000) / 10;
