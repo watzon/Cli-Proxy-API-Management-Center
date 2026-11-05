@@ -2524,6 +2524,8 @@
       "matching_one": "{{formatted}} 个会话匹配",
       "matching_other": "{{formatted}} 个会话匹配",
       "search_values": "搜索值",
+      "values_hint": "选择一个或多个值。数字表示会话数。",
+      "status_hint": "“错误”只显示包含失败轮次的会话。",
       "select_all": "全选",
       "no_matches": "没有与“{{q}}”匹配的值。按 Enter 仍按此值筛选。",
       "no_values": "此时间范围内没有值。输入一个值并按 Enter 添加。",

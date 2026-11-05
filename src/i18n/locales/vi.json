@@ -2531,6 +2531,8 @@
       "matching_one": "{{formatted}} phiên khớp",
       "matching_other": "{{formatted}} phiên khớp",
       "search_values": "Tìm giá trị",
+      "values_hint": "Chọn một hoặc nhiều giá trị. Các số cho biết số phiên.",
+      "status_hint": "Lỗi chỉ hiển thị các phiên có một lượt thất bại.",
       "select_all": "Chọn tất cả",
       "no_matches": "Không có giá trị khớp với \"{{q}}\". Nhấn Enter để vẫn lọc theo giá trị này.",
       "no_values": "Không có giá trị trong khoảng này. Nhập một giá trị rồi nhấn Enter.",

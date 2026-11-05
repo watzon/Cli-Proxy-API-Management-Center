@@ -10,7 +10,13 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/Button';
-import { IconChevronDown, IconSearch, IconSlidersHorizontal, IconX } from '@/components/ui/icons';
+import {
+  IconCheck,
+  IconChevronDown,
+  IconSearch,
+  IconSlidersHorizontal,
+  IconX,
+} from '@/components/ui/icons';
 import type { TraceStatsGroup } from '@/services/api/traces';
 import { OTHER_GROUP_KEY } from '../chart';
 import { useTracesEnvironment } from '../context';
@@ -30,6 +36,7 @@ import {
 import { useTraceFilters } from '../useTraceFilters';
 import { useTraceFormat } from '../useTraceFormat';
 import styles from './FilterBar.module.scss';
+import { SegmentedControl } from './SegmentedControl';
 
 export type FilterBarField = 'range' | TextFilterField | 'status';
 
@@ -318,7 +325,9 @@ function RangeChip({ filters, onApply }: { filters: TraceFilterState; onApply: S
   useEffect(() => {
     if (!open) return;
     const panel = panelRef.current;
-    (panel?.querySelector<HTMLElement>('input:checked') ?? panel?.querySelector<HTMLElement>('input'))?.focus();
+    (
+      panel?.querySelector<HTMLElement>('[aria-pressed="true"]') ?? panel?.querySelector<HTMLElement>('button')
+    )?.focus();
   }, [open]);
 
   const value =
@@ -366,7 +375,6 @@ function RangePanel({
   close: () => void;
 }) {
   const { t } = useTranslation();
-  const name = useId();
   const today = toLocalDateString(new Date());
   const [custom, setCustom] = useState(filters.range === 'custom');
   const [from, setFrom] = useState(filters.from || today);
@@ -391,20 +399,23 @@ function RangePanel({
 
   return (
     <form onSubmit={applyCustom} className={styles.panelField}>
-      <fieldset className={styles.options}>
-        <legend className={styles.panelTitle}>{t('traces.filters.range')}</legend>
-        {RANGE_PRESETS.map((preset) => (
-          <label key={preset} className={styles.option}>
-            <input
-              type="radio"
-              name={name}
-              checked={custom ? preset === 'custom' : filters.range === preset}
-              onChange={() => pick(preset)}
-            />
-            {t(`traces.filters.range_${preset}`)}
-          </label>
-        ))}
-      </fieldset>
+      <div className={styles.options} role="group" aria-label={t('traces.filters.range')}>
+        {RANGE_PRESETS.map((preset) => {
+          const current = custom ? preset === 'custom' : filters.range === preset;
+          return (
+            <button
+              key={preset}
+              type="button"
+              className={`${styles.option} ${current ? styles.optionCurrent : ''}`}
+              aria-pressed={current}
+              onClick={() => pick(preset)}
+            >
+              <span className={styles.optionLabel}>{t(`traces.filters.range_${preset}`)}</span>
+              {current ? <IconCheck size={14} className={styles.optionCheck} /> : null}
+            </button>
+          );
+        })}
+      </div>
       {custom ? (
         <>
           <div className={styles.dates}>
@@ -430,9 +441,9 @@ function RangePanel({
             </label>
           </div>
           <div className={styles.actions}>
-            <Button type="submit" size="sm" disabled={invalid}>
+            <button type="submit" className={styles.doneButton} disabled={invalid}>
               {t('traces.filters.apply')}
-            </Button>
+            </button>
           </div>
         </>
       ) : null}
@@ -559,13 +570,13 @@ function FiltersControl({
             <MatchCount filters={filters} />
             <div className={styles.actions}>
               {activeCount > 0 ? (
-                <Button variant="ghost" size="sm" onClick={() => apply(clearPatch(fields))}>
+                <button type="button" className={styles.linkButton} onClick={() => apply(clearPatch(fields))}>
                   {t('traces.filters.clear_all')}
-                </Button>
+                </button>
               ) : null}
-              <Button size="sm" onClick={() => close(true)}>
+              <button type="button" className={styles.doneButton} onClick={() => close(true)}>
                 {t('traces.filters.done')}
-              </Button>
+              </button>
             </div>
           </div>
         </div>
@@ -624,24 +635,16 @@ function StatusPane({
   apply: (patch: Partial<TraceFilterState>) => void;
 }) {
   const { t } = useTranslation();
-  const name = useId();
   return (
     <>
       <PaneHeader title={t('traces.filters.status')} />
-      <fieldset className={styles.valueList}>
-        <legend className={styles.srOnly}>{t('traces.filters.status')}</legend>
-        {STATUS_VALUES.map((status) => (
-          <label key={status || 'all'} className={styles.valueOption}>
-            <input
-              type="radio"
-              name={name}
-              checked={value === status}
-              onChange={() => apply({ status })}
-            />
-            <span className={styles.valueLabel}>{statusLabel(t, status)}</span>
-          </label>
-        ))}
-      </fieldset>
+      <SegmentedControl
+        label={t('traces.filters.status')}
+        value={value}
+        options={STATUS_VALUES.map((status) => ({ value: status, label: statusLabel(t, status) }))}
+        onChange={(status) => apply({ status })}
+      />
+      <span className={styles.hint}>{t('traces.filters.status_hint')}</span>
     </>
   );
 }
@@ -684,18 +687,26 @@ function FolderPane({
       </form>
       <span className={styles.hint}>{t('traces.filters.folder_hint')}</span>
       {values.length > 0 ? (
-        <div className={styles.valueList} role="group" aria-label={t('traces.filters.folder')}>
+        <ul className={styles.valueList} aria-label={t('traces.filters.folder')}>
           {values.map((value) => (
-            <label key={value} className={styles.valueOption}>
-              <input
-                type="checkbox"
-                checked
-                onChange={() => apply({ folder: values.filter((item) => item !== value) })}
-              />
-              <span className={`${styles.valueLabel} ${styles.mono}`}>{value}</span>
-            </label>
+            <li key={value} className={styles.folderRow}>
+              <span className={`${styles.valueLabel} ${styles.mono}`} title={value}>
+                {value}
+              </span>
+              <button
+                type="button"
+                className={styles.iconButton}
+                aria-label={t('traces.filters.remove_value', {
+                  field: t('traces.filters.folder'),
+                  value,
+                })}
+                onClick={() => apply({ folder: values.filter((item) => item !== value) })}
+              >
+                <IconX size={14} />
+              </button>
+            </li>
           ))}
-        </div>
+        </ul>
       ) : null}
     </>
   );
@@ -800,6 +811,7 @@ function ValuesPane({
           </button>
         ) : null}
       </PaneHeader>
+      <span className={styles.hint}>{t('traces.filters.values_hint')}</span>
       <form className={styles.search} onSubmit={addTyped}>
         <label htmlFor={searchId} className={styles.srOnly}>
           {t('traces.filters.search_values')}
@@ -820,17 +832,28 @@ function ValuesPane({
       {failed ? <span className={styles.hint}>{t('traces.filters.values_failed')}</span> : null}
       {visible.length > 0 ? (
         <div className={styles.valueList} role="group" aria-label={title}>
-          {visible.map((entry) => (
-            <label key={entry.key} className={styles.valueOption} title={entry.key}>
-              <input
-                type="checkbox"
-                checked={selected.includes(entry.key)}
-                onChange={() => toggle(entry.key)}
-              />
-              <span className={styles.valueLabel}>{entry.label}</span>
-              <span className={styles.valueCount}>{fmt.count(entry.sessions)}</span>
-            </label>
-          ))}
+          {visible.map((entry) => {
+            const checked = selected.includes(entry.key);
+            return (
+              <label
+                key={entry.key}
+                className={`${styles.valueOption} ${checked ? styles.valueOptionChecked : ''}`}
+                title={entry.key}
+              >
+                <input
+                  type="checkbox"
+                  className={styles.checkInput}
+                  checked={checked}
+                  onChange={() => toggle(entry.key)}
+                />
+                <span className={styles.checkBox} aria-hidden="true">
+                  {checked ? <IconCheck size={12} /> : null}
+                </span>
+                <span className={styles.valueLabel}>{entry.label}</span>
+                <span className={styles.valueCount}>{fmt.count(entry.sessions)}</span>
+              </label>
+            );
+          })}
         </div>
       ) : entries !== null && needle ? (
         <span className={styles.hint}>{t('traces.filters.no_matches', { q: query.trim() })}</span>

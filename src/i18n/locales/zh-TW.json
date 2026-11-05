@@ -2552,6 +2552,8 @@
       "matching_one": "{{formatted}} 個工作階段符合",
       "matching_other": "{{formatted}} 個工作階段符合",
       "search_values": "搜尋值",
+      "values_hint": "選擇一個或多個值。數字表示工作階段數。",
+      "status_hint": "「錯誤」只顯示包含失敗輪次的工作階段。",
       "select_all": "全選",
       "no_matches": "沒有與「{{q}}」相符的值。按 Enter 仍以此值篩選。",
       "no_values": "此時間範圍內沒有值。輸入一個值並按 Enter 新增。",

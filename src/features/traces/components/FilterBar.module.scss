@@ -71,12 +71,12 @@
   top: calc(100% + 6px);
   left: 0;
   width: max-content;
-  min-width: 240px;
+  min-width: 220px;
   max-width: min(340px, calc(100vw - 32px));
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 12px;
+  padding: 6px;
   border-radius: 10px;
   border: 1px solid var(--border-color);
   background: var(--floating-surface);
@@ -113,8 +113,6 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  max-height: 240px;
-  overflow-y: auto;
   margin: 0;
   padding: 0;
   border: 0;
@@ -124,12 +122,14 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  min-height: 32px;
-  padding: 0 8px;
+  width: 100%;
+  min-height: 34px;
+  padding: 0 10px;
   border: 0;
-  border-radius: 6px;
+  border-radius: 7px;
   background: transparent;
   color: var(--text-primary);
+  font: inherit;
   font-size: 13px;
   text-align: left;
   cursor: pointer;
@@ -137,10 +137,19 @@
   &:hover {
     background: var(--bg-tertiary);
   }
+}
 
-  input {
-    margin: 0;
-  }
+.optionCurrent {
+  font-weight: 600;
+}
+
+.optionLabel {
+  flex: 1 1 auto;
+}
+
+.optionCheck {
+  flex: none;
+  color: var(--text-primary);
 }
 
 .optionMeta {
@@ -343,8 +352,16 @@
 }
 
 .fieldButtonCurrent {
-  background: var(--bg-tertiary);
+  background: var(--floating-surface);
+  box-shadow: inset 0 0 0 1px var(--border-color);
   font-weight: 650;
+}
+
+.fieldButton .fieldCount {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 11px;
 }
 
 .fieldPane {
@@ -355,8 +372,12 @@
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   overflow: hidden;
+
+  .paneHeader + .hint {
+    margin-top: -6px;
+  }
 
   .search {
     flex: none;
@@ -373,7 +394,7 @@
 
 .paneTitle {
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 650;
 }
 
@@ -403,6 +424,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  margin-inline: -6px;
   min-height: 0;
   overflow-y: auto;
   margin: 0;
@@ -411,22 +433,109 @@
 }
 
 .valueOption {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
   min-height: 36px;
-  padding: 0 8px;
-  border-radius: 6px;
+  padding: 0 10px;
+  border-radius: 7px;
   font-size: 13px;
   cursor: pointer;
+  user-select: none;
+  transition: background-color 120ms ease;
 
   &:hover {
     background: var(--bg-tertiary);
   }
 
-  input {
-    flex: none;
-    margin: 0;
+  &:hover .checkBox {
+    border-color: var(--text-secondary);
+  }
+}
+
+.valueOptionChecked {
+  background: color-mix(in srgb, var(--bg-tertiary) 70%, transparent);
+
+  .valueLabel {
+    font-weight: 600;
+  }
+
+  .valueCount {
+    color: var(--text-primary);
+  }
+}
+
+// The real input stays for keyboard and screen readers; the box is drawn.
+.checkInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.checkBox {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  border: 1.5px solid var(--border-primary);
+  background: var(--bg-secondary);
+  color: var(--bg-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 120ms ease,
+    background-color 120ms ease;
+
+  svg {
+    display: block;
+    stroke-width: 3;
+  }
+}
+
+.valueOptionChecked .checkBox,
+.valueOptionChecked:hover .checkBox {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+}
+
+.folderRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 4px 0 10px;
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--bg-tertiary) 70%, transparent);
+  font-size: 13px;
+  list-style: none;
+}
+
+.iconButton {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
   }
 }
 
@@ -458,6 +567,27 @@
   gap: 8px;
   padding: 10px 16px;
   border-top: 1px solid var(--border-color);
+}
+
+.doneButton {
+  height: 32px;
+  padding: 0 16px;
+  border: 1px solid var(--text-primary);
+  border-radius: 8px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    opacity: 0.88;
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
 }
 
 .matchCount {
@@ -537,6 +667,8 @@
 .fieldButton:focus-visible,
 .linkButton:focus-visible,
 .activeChip:focus-visible,
+.iconButton:focus-visible,
+.doneButton:focus-visible,
 .valueOption:has(input:focus-visible) {
   outline: 2px solid var(--text-primary);
   outline-offset: 2px;

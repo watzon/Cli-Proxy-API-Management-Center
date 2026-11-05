@@ -2525,6 +2525,8 @@
       "matching_one": "{{formatted}} oturum eşleşiyor",
       "matching_other": "{{formatted}} oturum eşleşiyor",
       "search_values": "Değer ara",
+      "values_hint": "Bir veya daha fazla değer seçin. Sayılar oturum sayısını gösterir.",
+      "status_hint": "Hatalar yalnızca başarısız bir turu olan oturumları gösterir.",
       "select_all": "Tümünü seç",
       "no_matches": "\"{{q}}\" ile eşleşen değer yok. Yine de buna göre filtrelemek için Enter'a basın.",
       "no_values": "Bu aralıkta değer yok. Bir değer yazıp Enter'a basın.",

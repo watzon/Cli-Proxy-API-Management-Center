@@ -2525,6 +2525,8 @@
       "matching_one": "{{formatted}} session matches",
       "matching_other": "{{formatted}} sessions match",
       "search_values": "Search values",
+      "values_hint": "Select one or more values. The numbers show sessions.",
+      "status_hint": "Errors shows only sessions that have a failed turn.",
       "select_all": "Select all",
       "no_matches": "No values match \"{{q}}\". Press Enter to filter by it anyway.",
       "no_values": "No values in this range. Type a value and press Enter to add it.",

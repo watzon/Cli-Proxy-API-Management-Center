@@ -2525,6 +2525,8 @@
       "matching_one": "세션 {{formatted}}개 일치",
       "matching_other": "세션 {{formatted}}개 일치",
       "search_values": "값 검색",
+      "values_hint": "값을 하나 이상 선택하세요. 숫자는 세션 수입니다.",
+      "status_hint": "오류는 실패한 턴이 있는 세션만 표시합니다.",
       "select_all": "모두 선택",
       "no_matches": "\"{{q}}\"와 일치하는 값이 없습니다. Enter를 누르면 이 값으로 필터링합니다.",
       "no_values": "이 기간에 값이 없습니다. 값을 입력하고 Enter를 눌러 추가하세요.",
