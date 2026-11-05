@@ -2431,6 +2431,16 @@
     "expired": "Bağlama Oturumunun Süresi Doldu. Lütfen Yeniden Başla."
   },
   "traces": {
+    "project_source": {
+      "label": "Proje kaynağı",
+      "header": "İstemci başlığı",
+      "path": "Temel URL",
+      "rule": "Proje kuralı",
+      "remote": "Git uzak deposu",
+      "folder": "Klasör adı",
+      "inherited": "Önceki tur",
+      "none": "Sinyal yok"
+    },
     "common": {
       "crumb": "İzleme / İzler",
       "unknown": "Bilinmiyor",

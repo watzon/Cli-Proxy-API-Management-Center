@@ -2431,6 +2431,16 @@
     "expired": "The binding session expired. Please start over."
   },
   "traces": {
+    "project_source": {
+      "label": "Project from",
+      "header": "Client header",
+      "path": "Base URL",
+      "rule": "Project rule",
+      "remote": "Git remote",
+      "folder": "Folder name",
+      "inherited": "Earlier turn",
+      "none": "No signal"
+    },
     "common": {
       "crumb": "Observe / Traces",
       "unknown": "Unknown",

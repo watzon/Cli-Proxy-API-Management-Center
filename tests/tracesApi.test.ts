@@ -44,6 +44,17 @@ describe('traces API normalizers', () => {
     expect(sessions.sessions.map((session) => session.cost_usd)).toEqual([null, 0]);
   });
 
+  test('keep known project sources and blank out unknown or missing ones', () => {
+    const sessions = normalizeSessions({
+      sessions: [
+        { id: 'a', project_source: 'remote' },
+        { id: 'b', project_source: 'guess' },
+        { id: 'c' },
+      ],
+    });
+    expect(sessions.sessions.map((session) => session.project_source)).toEqual(['remote', '', '']);
+  });
+
   test('read both diff shapes and reject unknown block kinds', () => {
     expect(normalizeBlock({ kind: 'tool_call', diff: { file: 'a.go', old: 'x', new: 'y' } })?.diff).toEqual({
       file: 'a.go',

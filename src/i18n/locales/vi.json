@@ -2437,6 +2437,16 @@
     "expired": "Phiên liên kết đã hết hạn. Hãy bắt đầu lại."
   },
   "traces": {
+    "project_source": {
+      "label": "Nguồn dự án",
+      "header": "Header của client",
+      "path": "URL gốc",
+      "rule": "Quy tắc dự án",
+      "remote": "Git remote",
+      "folder": "Tên thư mục",
+      "inherited": "Lượt trước",
+      "none": "Không có tín hiệu"
+    },
     "common": {
       "crumb": "Quan sát / Dấu vết",
       "unknown": "Không rõ",

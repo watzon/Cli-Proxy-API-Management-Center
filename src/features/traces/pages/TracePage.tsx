@@ -129,6 +129,8 @@ function TraceView({
 
   const chips: Array<[string, string]> = [
     [t('traces.columns.project'), session.project],
+    [t('traces.project_source.label'), session.project_source ? t(`traces.project_source.${session.project_source}`) : ''],
+    [t('traces.facts.folder'), session.folder],
     [
       t('traces.columns.client'),
       session.client ? `${session.client}${session.client_version ? ` ${session.client_version}` : ''}` : '',

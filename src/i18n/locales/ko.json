@@ -2431,6 +2431,16 @@
     "expired": "바인딩 세션이 만료되었습니다. 다시 시작하세요."
   },
   "traces": {
+    "project_source": {
+      "label": "프로젝트 출처",
+      "header": "클라이언트 헤더",
+      "path": "기본 URL",
+      "rule": "프로젝트 규칙",
+      "remote": "Git 원격",
+      "folder": "폴더 이름",
+      "inherited": "이전 턴",
+      "none": "신호 없음"
+    },
     "common": {
       "crumb": "관찰 / 트레이스",
       "unknown": "알 수 없음",

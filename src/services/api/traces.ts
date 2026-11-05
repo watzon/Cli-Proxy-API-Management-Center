@@ -143,10 +143,14 @@ export interface TraceProjectRulesResponse {
 }
 
 /** `S` in the spec. */
+/** How the server decided a session's project; '' when the server does not say. */
+export type TraceProjectSource = 'header' | 'path' | 'rule' | 'remote' | 'folder' | 'inherited' | 'none' | '';
+
 export interface TraceSession {
   id: string;
   title: string;
   project: string;
+  project_source: TraceProjectSource;
   folder: string;
   client: string;
   client_version: string;
@@ -430,6 +434,7 @@ const oneOf = <T extends string>(value: unknown, allowed: readonly T[], fallback
   return (allowed as readonly string[]).includes(text) ? (text as T) : fallback;
 };
 
+const PROJECT_SOURCES = ['header', 'path', 'rule', 'remote', 'folder', 'inherited', 'none', ''] as const;
 const TURN_STATUSES = ['ok', 'retried', 'error'] as const;
 const BLOCK_KINDS = ['user', 'assistant', 'thinking', 'tool_call', 'tool_result', 'system'] as const;
 const COST_TYPES = ['input', 'cache_read', 'cache_write_5m', 'cache_write_1h', 'output'] as const;
@@ -574,6 +579,7 @@ export const normalizeSession = (value: unknown): TraceSession | null => {
     id,
     title: str(raw.title),
     project: str(raw.project),
+    project_source: oneOf(raw.project_source, PROJECT_SOURCES, ''),
     folder: str(raw.folder),
     client: str(raw.client),
     client_version: str(raw.client_version),

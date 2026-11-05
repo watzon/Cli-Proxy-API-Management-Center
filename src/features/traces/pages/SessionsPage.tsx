@@ -205,7 +205,14 @@ export function SessionsPage() {
                         ) : null}
                       </div>
                     </TableCell>
-                    <TableCell>{session.project || t('traces.common.none')}</TableCell>
+                    <TableCell>
+                      {session.project || t('traces.common.none')}
+                      {session.project_source ? (
+                        <div className={styles.rowMeta} title={session.folder || undefined}>
+                          <span>{t(`traces.project_source.${session.project_source}`)}</span>
+                        </div>
+                      ) : null}
+                    </TableCell>
                     <TableCell>
                       {session.client
                         ? `${session.client}${session.client_version ? ` ${session.client_version}` : ''}`

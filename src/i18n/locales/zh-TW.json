@@ -2458,6 +2458,16 @@
     "expired": "綁定工作階段已過期，請重新開始。"
   },
   "traces": {
+    "project_source": {
+      "label": "專案來源",
+      "header": "用戶端標頭",
+      "path": "基礎 URL",
+      "rule": "專案規則",
+      "remote": "Git 遠端儲存庫",
+      "folder": "資料夾名稱",
+      "inherited": "先前的輪次",
+      "none": "無訊號"
+    },
     "common": {
       "crumb": "觀測 / 追蹤",
       "unknown": "未知",

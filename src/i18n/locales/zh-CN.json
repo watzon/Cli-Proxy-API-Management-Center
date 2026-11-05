@@ -2430,6 +2430,16 @@
     "expired": "绑定会话已过期，请重新开始。"
   },
   "traces": {
+    "project_source": {
+      "label": "项目来源",
+      "header": "客户端请求头",
+      "path": "基础 URL",
+      "rule": "项目规则",
+      "remote": "Git 远程仓库",
+      "folder": "文件夹名称",
+      "inherited": "之前的轮次",
+      "none": "无信号"
+    },
     "common": {
       "crumb": "观测 / 追踪",
       "unknown": "未知",

@@ -131,6 +131,7 @@ function buildSessions(now: number): { sessions: TraceSession[]; details: Map<st
       id,
       title: TITLES[index % TITLES.length],
       project: project.name,
+      project_source: project.name === 'unassigned' ? 'none' : project.key.startsWith('~') ? 'folder' : 'remote',
       folder: project.key.startsWith('~') ? project.key : `~/code/${project.name}`,
       client: CLIENTS[index % CLIENTS.length],
       client_version: index % CLIENTS.length === 0 ? '2.1.318' : '1.4.0',
