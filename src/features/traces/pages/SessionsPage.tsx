@@ -98,7 +98,7 @@ export function SessionsPage() {
       />
 
       <FilterBar
-        fields={['range', 'project', 'client', 'model', 'key', 'status']}
+        fields={['range', 'status', 'project', 'tag', 'key', 'client', 'model', 'account', 'machine', 'folder']}
         searchPlaceholder={t('traces.filters.search_sessions')}
       />
 
@@ -155,10 +155,14 @@ export function SessionsPage() {
                     onClick={() =>
                       setFilters({
                         q: '',
-                        project: '',
-                        client: '',
-                        model: '',
-                        key: '',
+                        project: [],
+                        folder: [],
+                        client: [],
+                        model: [],
+                        key: [],
+                        tag: [],
+                        account: [],
+                        machine: [],
                         status: '',
                       })
                     }

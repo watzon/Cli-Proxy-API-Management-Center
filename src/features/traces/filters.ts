@@ -9,7 +9,11 @@ export const RANGE_PRESETS = ['today', '7d', '30d', 'week', 'month', '90d', 'cus
 export type RangePreset = (typeof RANGE_PRESETS)[number];
 export const DEFAULT_RANGE: RangePreset = '30d';
 
-/** Text filters, in the order the filter bar shows them. */
+/**
+ * List filters, in the order the filter panel shows them. Each takes several
+ * values: a session matches a field when it matches any of its values, and it
+ * must match every field.
+ */
 export const TEXT_FILTER_FIELDS = [
   'project',
   'folder',
@@ -22,6 +26,9 @@ export const TEXT_FILTER_FIELDS = [
 ] as const;
 export type TextFilterField = (typeof TEXT_FILTER_FIELDS)[number];
 
+/** Most values one filter field keeps, the same bound as the server. */
+export const MAX_FILTER_VALUES = 50;
+
 export type StatusFilter = '' | 'ok' | 'error';
 
 export interface TraceFilterState {
@@ -30,14 +37,14 @@ export interface TraceFilterState {
   from: string;
   /** Custom range end (inclusive), `YYYY-MM-DD` in local time. */
   to: string;
-  project: string;
-  folder: string;
-  client: string;
-  model: string;
-  key: string;
-  tag: string;
-  account: string;
-  machine: string;
+  project: string[];
+  folder: string[];
+  client: string[];
+  model: string[];
+  key: string[];
+  tag: string[];
+  account: string[];
+  machine: string[];
   status: StatusFilter;
   q: string;
 }
@@ -46,17 +53,28 @@ export const DEFAULT_FILTERS: TraceFilterState = {
   range: DEFAULT_RANGE,
   from: '',
   to: '',
-  project: '',
-  folder: '',
-  client: '',
-  model: '',
-  key: '',
-  tag: '',
-  account: '',
-  machine: '',
+  project: [],
+  folder: [],
+  client: [],
+  model: [],
+  key: [],
+  tag: [],
+  account: [],
+  machine: [],
   status: '',
   q: '',
 };
+
+/** Trims values and drops blanks and repeats, keeping the first order. */
+export function cleanValues(values: readonly string[]): string[] {
+  const out: string[] = [];
+  for (const raw of values) {
+    const value = raw.trim();
+    if (value && !out.includes(value)) out.push(value);
+    if (out.length === MAX_FILTER_VALUES) break;
+  }
+  return out;
+}
 
 /** All URL parameters owned by the filter state. */
 export const FILTER_PARAM_NAMES: ReadonlyArray<keyof TraceFilterState> = [
@@ -98,6 +116,7 @@ const isRangePreset = (value: string): value is RangePreset =>
 export function parseFilterState(search: string | URLSearchParams): TraceFilterState {
   const params = typeof search === 'string' ? new URLSearchParams(search) : search;
   const read = (name: string) => (params.get(name) ?? '').trim();
+  const readList = (name: string) => cleanValues(params.getAll(name));
 
   const rawRange = read('range');
   let range: RangePreset = isRangePreset(rawRange) ? rawRange : DEFAULT_RANGE;
@@ -121,14 +140,14 @@ export function parseFilterState(search: string | URLSearchParams): TraceFilterS
     range,
     from,
     to,
-    project: read('project'),
-    folder: read('folder'),
-    client: read('client'),
-    model: read('model'),
-    key: read('key'),
-    tag: read('tag'),
-    account: read('account'),
-    machine: read('machine'),
+    project: readList('project'),
+    folder: readList('folder'),
+    client: readList('client'),
+    model: readList('model'),
+    key: readList('key'),
+    tag: readList('tag'),
+    account: readList('account'),
+    machine: readList('machine'),
     status: status === 'ok' || status === 'error' ? status : '',
     // Search text keeps inner spaces; only trim the ends.
     q: (params.get('q') ?? '').trim(),
@@ -154,8 +173,7 @@ export function writeFilterState(
     if (state.to) next.set('to', state.to);
   }
   for (const field of TEXT_FILTER_FIELDS) {
-    const value = state[field].trim();
-    if (value) next.set(field, value);
+    for (const value of cleanValues(state[field])) next.append(field, value);
   }
   if (state.status) next.set('status', state.status);
   if (state.q.trim()) next.set('q', state.q.trim());
@@ -228,18 +246,18 @@ export function toQueryFilters(state: TraceFilterState, now: Date): TraceQueryFi
     to: range.to.toISOString(),
   };
   for (const field of TEXT_FILTER_FIELDS) {
-    const value = state[field].trim();
-    if (value) query[field] = value;
+    const values = cleanValues(state[field]);
+    if (values.length > 0) query[field] = values;
   }
   if (state.status) query.status = state.status;
   if (state.q.trim()) query.q = state.q.trim();
   return query;
 }
 
-/** Number of active filters besides the range and search, for the "Clear filters" action. */
+/** Number of active filter values besides the range and search. */
 export function activeFilterCount(state: TraceFilterState): number {
   return (
-    TEXT_FILTER_FIELDS.filter((field) => state[field].trim() !== '').length +
+    TEXT_FILTER_FIELDS.reduce((sum, field) => sum + cleanValues(state[field]).length, 0) +
     (state.status ? 1 : 0)
   );
 }

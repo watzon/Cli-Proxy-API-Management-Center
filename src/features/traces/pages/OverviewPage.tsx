@@ -122,7 +122,7 @@ export function OverviewPage() {
       />
 
       <FilterBar
-        fields={['range', 'project', 'folder', 'client', 'model', 'key', 'account', 'machine', 'status']}
+        fields={['range', 'status', 'project', 'tag', 'key', 'client', 'model', 'account', 'machine', 'folder']}
         searchPlaceholder={t('traces.filters.search_titles')}
       />
 

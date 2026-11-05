@@ -355,14 +355,15 @@ export interface TraceDeleteResult {
 export interface TraceQueryFilters {
   from?: string;
   to?: string;
-  project?: string;
-  folder?: string;
-  client?: string;
-  model?: string;
-  key?: string;
-  tag?: string;
-  account?: string;
-  machine?: string;
+  /** List filters repeat as query parameters (`tag=a&tag=b`): any value matches. */
+  project?: string[];
+  folder?: string[];
+  client?: string[];
+  model?: string[];
+  key?: string[];
+  tag?: string[];
+  account?: string[];
+  machine?: string[];
   status?: 'ok' | 'error';
   q?: string;
 }
@@ -878,15 +879,22 @@ export const serializePriceOverrides = (
     return entry;
   });
 
-/** Drops empty filter values so the backend applies its own defaults. */
+/**
+ * Drops empty filter values so the backend applies its own defaults. List
+ * filters become repeated parameters (`tag=a&tag=b`), which axios sends as is.
+ */
 export const buildTraceParams = (
   filters: TraceQueryFilters,
   extra: Record<string, string | number | boolean | undefined> = {}
-): Record<string, string> => {
-  const params: Record<string, string> = {};
+): URLSearchParams => {
+  const params = new URLSearchParams();
   for (const [name, value] of Object.entries({ ...filters, ...extra })) {
     if (value === undefined || value === null || value === '') continue;
-    params[name] = String(value);
+    if (Array.isArray(value)) {
+      for (const item of value) if (item !== '') params.append(name, String(item));
+    } else {
+      params.set(name, String(value));
+    }
   }
   return params;
 };

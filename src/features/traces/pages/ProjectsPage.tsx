@@ -54,7 +54,7 @@ export function ProjectsPage() {
 
   const data = resource.data;
   const sessionsLink = (projectId: string) =>
-    `${paths.sessions}?${writeFilterState({ ...DEFAULT_FILTERS, range: filters.range, from: filters.from, to: filters.to, project: projectId }).toString()}`;
+    `${paths.sessions}?${writeFilterState({ ...DEFAULT_FILTERS, range: filters.range, from: filters.from, to: filters.to, project: [projectId] }).toString()}`;
 
   return (
     <div className={styles.page}>

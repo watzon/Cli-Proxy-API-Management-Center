@@ -1,4 +1,11 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .bar {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -209,11 +216,328 @@
   }
 }
 
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.mono {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+}
+
+// ─── Filters button and panel ───────────────────────────────────────────
+
+// No position here: the panel anchors to the whole filter row.
+.filtersWrap {
+  display: flex;
+}
+
+.filtersButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-primary);
+  background: var(--floating-surface);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-hover);
+  }
+}
+
+.filtersButtonOpen {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+
+  &:hover {
+    border-color: var(--text-primary);
+  }
+
+  .badge {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+  }
+}
+
+.badge,
+.fieldCount {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  border-radius: 999px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  font-size: 12px;
+  font-weight: 650;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.filterPanel {
+  position: absolute;
+  z-index: $z-dropdown;
+  top: calc(100% + 6px);
+  right: 0;
+  width: min(760px, 100%);
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--floating-surface);
+  box-shadow: var(--floating-shadow);
+  overflow: hidden;
+}
+
+.panelBody {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 320px;
+  max-height: min(460px, 70vh);
+}
+
+.fieldNav {
+  flex: 1 1 180px;
+  box-sizing: border-box;
+  padding: 8px;
+  border-right: 1px solid var(--border-color);
+  background: var(--bg-quinary);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+}
+
+.fieldButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 13px;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--bg-tertiary);
+  }
+}
+
+.fieldButtonCurrent {
+  background: var(--bg-tertiary);
+  font-weight: 650;
+}
+
+.fieldPane {
+  flex: 999 1 320px;
+  min-width: 0;
+  max-height: inherit;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: hidden;
+
+  .search {
+    flex: none;
+  }
+}
+
+.paneHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.paneTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.paneActions {
+  display: flex;
+  gap: 4px;
+}
+
+.linkButton {
+  height: 28px;
+  padding: 0 6px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+  }
+}
+
+.valueList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 0;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.valueOption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 36px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--bg-tertiary);
+  }
+
+  input {
+    flex: none;
+    margin: 0;
+  }
+}
+
+.valueLabel {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.valueCount {
+  flex: none;
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.addRow {
+  display: flex;
+  gap: 8px;
+}
+
+.panelFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--border-color);
+}
+
+.matchCount {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+// ─── Active filter chips ────────────────────────────────────────────────
+
+.activeRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.activeChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  max-width: 320px;
+  padding: 0 8px 0 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border-primary);
+  background: var(--floating-surface);
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--border-hover);
+  }
+}
+
+.activeChipField {
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.activeChipValue {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activeChipIcon {
+  flex: none;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 640px) {
+  .panelBody {
+    max-height: 75vh;
+  }
+
+  .fieldNav {
+    flex: 1 1 100%;
+    flex-direction: row;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+  }
+
+  .fieldPane {
+    max-height: 50vh;
+  }
+}
+
 .chip:focus-visible,
 .option:focus-visible,
 .clear:focus-visible,
 .searchInput:focus-visible,
-.input:focus-visible {
+.input:focus-visible,
+.filtersButton:focus-visible,
+.fieldButton:focus-visible,
+.linkButton:focus-visible,
+.activeChip:focus-visible,
+.valueOption:has(input:focus-visible) {
   outline: 2px solid var(--text-primary);
   outline-offset: 2px;
 }

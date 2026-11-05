@@ -289,15 +289,18 @@ export function createMockTracesApi(options: MockTracesOptions = {}): TracesApi 
   };
 
   const projectName = (name: string) => state.projectNames.get(name) ?? name;
+  // A list filter matches when it is empty or any of its values matches.
+  const anyOf = (values: string[] | undefined, match: (value: string) => boolean) =>
+    !values || values.length === 0 || values.some(match);
 
   const matches = (session: TraceSession, filters: TraceQueryFilters) =>
-    (!filters.project || projectName(session.project) === filters.project || session.project === filters.project) &&
-    (!filters.client || session.client === filters.client) &&
-    (!filters.model || session.model === filters.model) &&
-    (!filters.key || session.key_label === filters.key) &&
-    (!filters.folder || session.folder.startsWith(filters.folder)) &&
-    (!filters.machine || session.machine === filters.machine) &&
-    (!filters.tag || session.tags.includes(filters.tag)) &&
+    anyOf(filters.project, (v) => projectName(session.project) === v || session.project === v) &&
+    anyOf(filters.client, (v) => session.client === v) &&
+    anyOf(filters.model, (v) => session.model === v) &&
+    anyOf(filters.key, (v) => session.key_label === v) &&
+    anyOf(filters.folder, (v) => session.folder.startsWith(v)) &&
+    anyOf(filters.machine, (v) => session.machine === v) &&
+    anyOf(filters.tag, (v) => session.tags.includes(v)) &&
     (!filters.status || (filters.status === 'error' ? session.errors > 0 : session.errors === 0)) &&
     (!filters.q || session.title.toLowerCase().includes(filters.q.toLowerCase()));
 

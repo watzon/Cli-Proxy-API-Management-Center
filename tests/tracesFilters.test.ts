@@ -17,9 +17,10 @@ const sample: TraceFilterState = {
   range: 'custom',
   from: '2026-10-01',
   to: '2026-10-31',
-  project: 'api-gateway',
-  folder: '~/code',
-  model: 'claude-opus-5-5',
+  project: ['api-gateway'],
+  folder: ['~/code'],
+  model: ['claude-opus-5-5'],
+  tag: ['client-a', 'oss'],
   status: 'error',
   q: 'refund webhook',
 };
@@ -46,11 +47,24 @@ describe('traces URL filter state', () => {
 
   test('keeps parameters it does not own and resets the ones asked for', () => {
     const base = new URLSearchParams('turn=t-14&page=3&sort=cost&project=old');
-    const next = writeFilterState({ ...DEFAULT_FILTERS, project: 'new' }, base, ['page']);
+    const next = writeFilterState({ ...DEFAULT_FILTERS, project: ['new'] }, base, ['page']);
     expect(next.get('turn')).toBe('t-14');
     expect(next.get('sort')).toBe('cost');
-    expect(next.get('project')).toBe('new');
+    expect(next.getAll('project')).toEqual(['new']);
     expect(next.has('page')).toBe(false);
+  });
+
+  test('list filters repeat in the URL and drop blanks and repeats', () => {
+    expect(writeFilterState({ ...DEFAULT_FILTERS, tag: ['a', 'b'] }).toString()).toBe('tag=a&tag=b');
+    const state = parseFilterState('tag=a&tag=+b+&tag=&tag=a&project=x');
+    expect(state.tag).toEqual(['a', 'b']);
+    expect(state.project).toEqual(['x']);
+    expect(state.client).toEqual([]);
+  });
+
+  test('keeps at most the server limit of values per field', () => {
+    const many = Array.from({ length: 60 }, (_, i) => `tag=t${i}`).join('&');
+    expect(parseFilterState(many).tag).toHaveLength(50);
   });
 
   test('rejects bad values instead of guessing', () => {
@@ -76,7 +90,8 @@ describe('traces URL filter state', () => {
 
   test('counts active filters besides range and search', () => {
     expect(activeFilterCount(DEFAULT_FILTERS)).toBe(0);
-    expect(activeFilterCount(sample)).toBe(4);
+    // One per value: project, folder, model, two tags and the status.
+    expect(activeFilterCount(sample)).toBe(6);
   });
 });
 
@@ -109,9 +124,10 @@ describe('traces range resolution', () => {
     expect(query.from).toBe(new Date(2026, 9, 1).toISOString());
     expect(query.to).toBe(new Date(2026, 10, 1).toISOString());
     expect(query).toMatchObject({
-      project: 'api-gateway',
-      folder: '~/code',
-      model: 'claude-opus-5-5',
+      project: ['api-gateway'],
+      folder: ['~/code'],
+      model: ['claude-opus-5-5'],
+      tag: ['client-a', 'oss'],
       status: 'error',
       q: 'refund webhook',
     });

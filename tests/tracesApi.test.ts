@@ -100,11 +100,13 @@ describe('traces API normalizers', () => {
   });
 
   test('query params drop empty filters', () => {
-    expect(buildTraceParams({ from: 'f', project: '', q: undefined }, { limit: 25, include_subagents: false })).toEqual({
-      from: 'f',
-      limit: '25',
-      include_subagents: 'false',
-    });
+    expect(
+      buildTraceParams({ from: 'f', project: [], q: undefined }, { limit: 25, include_subagents: false }).toString()
+    ).toBe('from=f&limit=25&include_subagents=false');
+  });
+
+  test('query params repeat list filters', () => {
+    expect(buildTraceParams({ tag: ['a', 'b c'], project: ['p'] }).toString()).toBe('tag=a&tag=b+c&project=p');
   });
 });
 

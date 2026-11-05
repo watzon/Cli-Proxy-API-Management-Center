@@ -39,7 +39,7 @@ export function ErrorsPage() {
   return (
     <div className={styles.page}>
       <PageHeader title={t('traces.errors.title')} />
-      <FilterBar fields={['range', 'project', 'client', 'model', 'key', 'account']} />
+      <FilterBar fields={['range', 'project', 'tag', 'key', 'client', 'model', 'account', 'machine']} />
 
       {resource.error && !data ? (
         <LoadError
